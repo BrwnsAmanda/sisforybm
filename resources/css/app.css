@@ -1,0 +1,21 @@
+/* Import Poppins dari Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+/* Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom font */
+:root {
+    --font-sans: "Poppins", "Instrument Sans", ui-sans-serif, system-ui,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+}
+
+/* Optional: override Tailwind base font */
+@layer base {
+    body {
+        font-family: var(--font-sans);
+    }
+}
