@@ -17,6 +17,8 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use App\Filament\Widgets\TotalStuntings;
+use App\Filament\Widgets\PenerimaManfaatChart;
+use App\Filament\Widgets\PerbandinganPenerimaChart;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminybmPanelProvider extends PanelProvider
@@ -45,6 +47,8 @@ class AdminybmPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
                 TotalStuntings::class,
+                PenerimaManfaatChart::class,
+                PerbandinganPenerimaChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,

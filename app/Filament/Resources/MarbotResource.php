@@ -132,6 +132,11 @@ class MarbotResource extends Resource
                 ->searchable()
                 ->sortable(),
 
+            Tables\Columns\TextColumn::make('nama_masjid')
+                ->label('Nama Masjid')
+                ->searchable()
+                ->sortable(),
+
             Tables\Columns\TextColumn::make('alamat_masjid')
                 ->label('Alamat Masjid')
                 ->limit(30)

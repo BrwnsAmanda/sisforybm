@@ -10,6 +10,7 @@ use App\Models\Ekonomi;
 class TotalStuntings extends BaseWidget
 {
     protected static ?string $pollingInterval = null; // nonaktifkan polling
+    protected static ?int $sort = 1;
 
     protected function getCards(): array
     {

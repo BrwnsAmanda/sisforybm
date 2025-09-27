@@ -136,7 +136,6 @@ Forms\Components\TextInput::make('selisih')
                 Tables\Columns\TextColumn::make('dusun')->label('Dusun')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('kelurahan_desa')->label('Kelurahan/Desa')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('kab_kota')->label('Kab/Kota')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('hasil')->label('Hasil'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
