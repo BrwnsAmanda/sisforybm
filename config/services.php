@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'cloudinary' => [
+    // Ini adalah variabel environment yang dibaca langsung oleh Cloudinary SDK
+    'url' => env('CLOUDINARY_URL'),
+],
+
 ];

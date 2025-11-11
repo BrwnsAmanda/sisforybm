@@ -12,7 +12,6 @@ class CreateEkonomi extends CreateRecord
 
      protected function getRedirectUrl(): string
     {
-        // Setelah create, redirect ke index (tabel list data)
         return $this->getResource()::getUrl('index');
     }
 }

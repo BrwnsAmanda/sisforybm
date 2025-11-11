@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Marbot extends Model
 {
     use HasFactory;
 
-    protected $table = 'marbots'; // Nama tabel
+    protected $table = 'marbots';
 
     protected $fillable = [
         'nama_lengkap',
@@ -49,4 +50,37 @@ class Marbot extends Model
         'tanggal_lahir' => 'date',
         'domisili_sesuai_ktp' => 'boolean',
     ];
+
+    protected $appends = [
+        'foto_masjid_url',
+        'fc_ktp_url',
+    ];
+
+    protected function fotoMasjidUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if (!$this->foto_masjid_path) return '-';
+
+                $bucket = env('SUPABASE_BUCKET');
+                $supabaseUrl = env('SUPABASE_URL');
+
+                return "$supabaseUrl/storage/v1/object/public/$bucket/{$this->foto_masjid_path}";
+            }
+        );
+    }
+
+    protected function fcKtpUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if (!$this->fc_ktp_path) return '-';
+
+                $bucket = env('SUPABASE_BUCKET');
+                $supabaseUrl = env('SUPABASE_URL');
+
+                return "$supabaseUrl/storage/v1/object/public/$bucket/{$this->fc_ktp_path}";
+            }
+        );
+    }
 }

@@ -6,32 +6,48 @@ use Filament\Widgets\ChartWidget;
 
 class PenerimaPieChart extends ChartWidget
 {
-    protected static ?string $heading = 'Distribusi Penerima Manfaat per Kategori';
+    protected static ?string $heading = 'Distribusi Penerima Manfaat per Pilar';
+    protected static ?int $sort = 5;
 
     protected function getData(): array
     {
-        // Hardcode data distribusi
-        $stunting = 120;
-        $beasiswa = 80;
-        $ekonomi = 150;
+        $ekonomi = 230;
+        $pendidikan = 180;
+        $kesehatan = 210;
+        $sosial = 160;
+        $dakwah = 140;
 
         return [
             'datasets' => [
                 [
-                    'data' => [$stunting, $beasiswa, $ekonomi],
+                    'data' => [
+                        $ekonomi,
+                        $pendidikan,
+                        $kesehatan,
+                        $sosial,
+                        $dakwah,
+                    ],
                     'backgroundColor' => [
-                        '#16a34a', // hijau
-                        '#3b82f6', // biru
-                        '#f59e0b', // oranye
+                        '#3b82f6', // biru - Ekonomi
+                        '#eab308', // kuning - Pendidikan
+                        '#22c55e', // hijau - Kesehatan
+                        '#ef4444', // merah - Sosial
+                        '#a855f7', // ungu - Dakwah
                     ],
                 ],
             ],
-            'labels' => ['Stunting', 'Beasiswa', 'Ekonomi'],
+            'labels' => [
+                'Ekonomi',
+                'Pendidikan',
+                'Kesehatan',
+                'Sosial Kemanusiaan',
+                'Dakwah',
+            ],
         ];
     }
 
     protected function getType(): string
     {
-        return 'pie'; // bisa juga 'doughnut'
+        return 'doughnut';
     }
 }

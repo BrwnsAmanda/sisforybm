@@ -32,6 +32,7 @@ return new class extends Migration
         $table->string('hasil')->nullable();
         $table->string('status_mustahik')->nullable();
         $table->string('asnaf')->nullable();
+        $table->date('tanggal_penerimaan')->nullable();
         $table->timestamps();
     });
 }

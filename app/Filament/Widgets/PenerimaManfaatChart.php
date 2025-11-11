@@ -15,7 +15,7 @@ class PenerimaManfaatChart extends LineChartWidget
             'datasets' => [
                 [
                     'label' => 'Jumlah Penerima Manfaat',
-                    'data' => [180, 250, 200, 400, 500], // hardcode data
+                    'data' => [180, 220, 200, 150, 200],
                     'borderColor' => '#3b82f6',
                     'backgroundColor' => 'rgba(59,130,246,0.3)',
                 ],

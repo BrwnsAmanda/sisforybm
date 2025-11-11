@@ -38,6 +38,13 @@ return [
             'report' => false,
         ],
 
+        'cloud' => [
+        'driver' => 'supabase',
+        'url' => env('SUPABASE_URL'),
+        'bucket' => env('SUPABASE_BUCKET'),
+        'key' => env('SUPABASE_KEY'),
+    ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
@@ -46,6 +53,40 @@ return [
             'throw' => false,
             'report' => false,
         ],
+
+        'supabase' => [
+    'driver' => 'supabase',
+    'url' => env('SUPABASE_URL'),
+    'bucket' => env('SUPABASE_BUCKET'),
+    'key' => env('SUPABASE_KEY'),
+],
+
+//'supabase_s3' => [
+   // 'driver' => 's3',
+   // 'key' => env('SUPABASE_KEY'),
+   // 'secret' => env('SUPABASE_SECRET'),
+  //  'region' => env('SUPABASE_REGION', 'us-east-1'),
+  //  'bucket' => env('SUPABASE_BUCKET'),
+   // 'endpoint' => env('SUPABASE_ENDPOINT', 'https://upurynpcspgmoblokxec.storage.supabase.co/storage/v1/s3'),
+   // 'use_path_style_endpoint' => true,
+//],
+
+// config/filesystems.php
+
+'supabase_s3' => [
+    'driver' => 's3',
+    // HAPUS PENGGUNAAN AWS_ACCESS_KEY_ID DI SINI
+    'key' => '', // Pastikan ini kosong atau hapus baris ini
+    'secret' => env('AWS_SECRET_ACCESS_KEY'), // Biarkan token JWT Service Role Key di sini
+
+    'region' => env('AWS_DEFAULT_REGION'), // Sekarang sudah ap-southeast-1
+    'bucket' => env('AWS_BUCKET'),
+
+    'endpoint' => env('AWS_ENDPOINT'),
+    'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', true),
+    'visibility' => 'public',
+],
+
 
         's3' => [
             'driver' => 's3',
@@ -76,5 +117,7 @@ return [
     'links' => [
         public_path('storage') => storage_path('app/public'),
     ],
+
+
 
 ];

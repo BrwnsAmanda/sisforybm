@@ -6,25 +6,30 @@ use Filament\Widgets\BarChartWidget;
 
 class PerbandinganPenerimaChart extends BarChartWidget
 {
-    protected static ?string $heading = 'Perbandingan Penerima Manfaat (Stunting vs Ekonomi)';
+    protected static ?string $heading = 'Perbandingan Penerima Manfaat per Pilar (Tahun 2025)';
     protected static ?int $sort = 3;
 
     protected function getData(): array
     {
+        // Data statis penerima manfaat tahun 2025
+        $labels = ['Ekonomi', 'Pendidikan', 'Kesehatan', 'Sosial Kemanusiaan', 'Dakwah'];
+        $data = [50, 44, 40, 5, 33];
+
         return [
             'datasets' => [
                 [
-                    'label' => 'Stunting',
-                    'data' => [50, 80, 120, 150, 200, 250], // contoh hardcode
-                    'backgroundColor' => 'rgba(34,197,94,0.7)', // hijau
-                ],
-                [
-                    'label' => 'Ekonomi',
-                    'data' => [30, 60, 90, 120, 160, 210], // contoh hardcode
-                    'backgroundColor' => 'rgba(59,130,246,0.7)', // biru
+                    'label' => 'Jumlah Penerima Manfaat 2025',
+                    'data' => $data,
+                    'backgroundColor' => [
+                        'rgba(59,130,246)',  // biru - Ekonomi
+                        'rgba(234,179,8)',   // kuning - Pendidikan
+                        'rgba(34,197,9)',   // hijau - Kesehatan
+                        'rgba(239,68,68)',   // merah - Sosial
+                        'rgba(168,85,247)',  // ungu - Dakwah
+                    ],
                 ],
             ],
-            'labels' => ['2019', '2020', '2021', '2022', '2023', '2024'],
+            'labels' => $labels,
         ];
     }
 
@@ -33,10 +38,17 @@ class PerbandinganPenerimaChart extends BarChartWidget
         return [
             'scales' => [
                 'x' => [
-                    'stacked' => true,
+                    'title' => [
+                        'display' => true,
+                        'text' => 'Pilar Program',
+                    ],
                 ],
                 'y' => [
-                    'stacked' => true,
+                    'title' => [
+                        'display' => true,
+                        'text' => 'Jumlah Penerima Manfaat',
+                    ],
+                    'beginAtZero' => true,
                 ],
             ],
         ];

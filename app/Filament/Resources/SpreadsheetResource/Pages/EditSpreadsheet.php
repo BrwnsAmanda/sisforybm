@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\FamilyStrengtheningResource\Pages;
+namespace App\Filament\Resources\SpreadsheetResource\Pages;
 
-use App\Filament\Resources\FamilyStrengtheningResource;
+use App\Filament\Resources\SpreadsheetResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditFamilyStrengthening extends EditRecord
+class EditSpreadsheet extends EditRecord
 {
-    protected static string $resource = FamilyStrengtheningResource::class;
+    protected static string $resource = SpreadsheetResource::class;
 
     protected function getHeaderActions(): array
     {

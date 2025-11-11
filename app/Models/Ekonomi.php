@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Ekonomi extends Model
 {
@@ -25,4 +26,22 @@ class Ekonomi extends Model
         'status_mustahik',
         'asnaf',
     ];
+
+    protected $appends = [
+        'foto_produk_url',
+    ];
+
+    protected function fotoProdukUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if (!$this->foto_produk) return '-';
+
+                $bucket = env('SUPABASE_BUCKET');
+                $supabaseUrl = env('SUPABASE_URL');
+
+                return "$supabaseUrl/storage/v1/object/public/$bucket/{$this->foto_produk}";
+            }
+        );
+    }
 }

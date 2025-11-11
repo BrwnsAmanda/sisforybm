@@ -9,6 +9,13 @@ use Filament\Forms\Form;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use pxlrbt\FilamentExcel\Columns\Column;
+use Filament\Facades\Filament;
+use Filament\Notifications\Notification;
+
 
 class StuntingResource extends Resource
 {
@@ -17,7 +24,32 @@ class StuntingResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-beaker';
     protected static ?string $navigationLabel = 'Stunting';
     protected static ?string $navigationGroup = 'KESEHATAN';
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 5;
+
+    public static function canView($record): bool
+    {
+        return true;
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'pj_kesehatan']);
+    }
+
+    public static function canEdit($record): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'pj_kesehatan']);
+    }
+
+    public static function canDelete($record): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'pj_kesehatan']);
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'pj_kesehatan']);
+    }
 
     public static function form(Form $form): Form
     {
@@ -33,7 +65,7 @@ class StuntingResource extends Resource
                 Forms\Components\TextInput::make('umur')->numeric()->required()
                     ->label('Umur')
                     ->placeholder('Cth. 24'),
-              Forms\Components\Select::make('agama')
+                Forms\Components\Select::make('agama')
                     ->label('Agama')
                     ->options([
                         'islam' => 'Islam',
@@ -66,27 +98,26 @@ class StuntingResource extends Resource
                 Forms\Components\TextInput::make('jumlah_tanggungan')->numeric()
                     ->label('Jumlah Tanggungan')
                     ->placeholder('Cth. 3'),
-               Forms\Components\TextInput::make('total_pengeluaran')
-    ->numeric()
-    ->label('Total Pengeluaran')
-    ->reactive()
-    ->afterStateUpdated(fn ($state, callable $set, $get) =>
-        $set('selisih', ($get('total_pendapatan') ?? 0) - ($state ?? 0))
-    ),
+                Forms\Components\TextInput::make('total_pengeluaran')
+                    ->numeric()
+                    ->label('Total Pengeluaran')
+                    ->reactive()
+                    ->afterStateUpdated(fn ($state, callable $set, $get) =>
+                        $set('selisih', ($get('total_pendapatan') ?? 0) - ($state ?? 0))
+                    ),
 
-Forms\Components\TextInput::make('total_pendapatan')
-    ->numeric()
-    ->label('Total Pendapatan')
-    ->reactive()
-    ->afterStateUpdated(fn ($state, callable $set, $get) =>
-        $set('selisih', ($state ?? 0) - ($get('total_pengeluaran') ?? 0))
-    ),
+                Forms\Components\TextInput::make('total_pendapatan')
+                    ->numeric()
+                    ->label('Total Pendapatan')
+                    ->reactive()
+                    ->afterStateUpdated(fn ($state, callable $set, $get) =>
+                        $set('selisih', ($state ?? 0) - ($get('total_pengeluaran') ?? 0))
+                    ),
 
-Forms\Components\TextInput::make('selisih')
-    ->label('Selisih')
-    ->disabled()
-    ->dehydrated(true), // biar tetap tersimpan ke database
-
+                Forms\Components\TextInput::make('selisih')
+                    ->label('Selisih')
+                    ->disabled()
+                    ->dehydrated(true),
 
                 Forms\Components\Select::make('komitmen_program')
                     ->label('Komitmen Program')
@@ -101,14 +132,14 @@ Forms\Components\TextInput::make('selisih')
                         'layak' => 'Layak',
                         'tidak_layak' => 'Tidak Layak',
                     ])
-                      ->native(false),
+                    ->native(false),
                 Forms\Components\Select::make('status_mustahik')
                     ->label('Status Mustahik')
                     ->options([
                         'mustahik' => 'Mustahik',
                         'non_mustahik' => 'Non Mustahik',
                     ])
-                      ->native(false),
+                    ->native(false),
                 Forms\Components\Select::make('asnaf')
                     ->label('Asnaf')
                     ->options([
@@ -121,7 +152,7 @@ Forms\Components\TextInput::make('selisih')
                         'ghorim' => 'Ghorim',
                         'ibnu_sabil' => 'Ibnu Sabil',
                     ])
-                      ->native(false),
+                    ->native(false),
                 Forms\Components\DatePicker::make('tanggal_penerimaan')->required()->label('Tanggal Penerimaan'),
             ]);
     }
@@ -138,11 +169,52 @@ Forms\Components\TextInput::make('selisih')
                 Tables\Columns\TextColumn::make('kab_kota')->label('Kab/Kota')->sortable()->searchable(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->visible(fn() => auth()->user()->hasAnyRole(['super_admin', 'pj_kesehatan'])),
+                Tables\Actions\EditAction::make()
+                    ->visible(fn() => auth()->user()->hasAnyRole(['super_admin', 'pj_kesehatan'])),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(fn() => auth()->user()->hasAnyRole(['super_admin', 'pj_kesehatan'])),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->visible(fn() => auth()->user()->hasAnyRole(['super_admin', 'pj_kesehatan'])),
+                ExportBulkAction::make()
+                    ->visible(fn() => auth()->user()->hasAnyRole(['super_admin', 'pj_kesehatan']))
+                    ->label('Export Data Terpilih'),
+            ])
+            ->headerActions([
+                ExportAction::make()
+                    ->label('Export Semua Data')
+                    ->visible(fn() => auth()->user()->hasAnyRole(['super_admin', 'pj_kesehatan']))
+                    ->color('success')
+                    ->exports([
+                        ExcelExport::make()
+                            ->fromModel()
+                            ->withFilename('Data-Stunting-' . date('Y-m-d'))
+                            ->withColumns([
+                                Column::make('nama_lengkap')->heading('Nama Lengkap'),
+                                Column::make('nomor_kk')->heading('Nomor KK'),
+                                Column::make('tanggal_lahir')->heading('Tanggal Lahir'),
+                                Column::make('umur')->heading('Umur'),
+                                Column::make('agama')->heading('Agama'),
+                                Column::make('dusun')->heading('Dusun'),
+                                Column::make('kelurahan_desa')->heading('Kelurahan/Desa'),
+                                Column::make('kecamatan')->heading('Kecamatan'),
+                                Column::make('kab_kota')->heading('Kab/Kota'),
+                                Column::make('telepon')->heading('Telepon'),
+                                Column::make('pekerjaan_ortu')->heading('Pekerjaan Ortu'),
+                                Column::make('jumlah_tanggungan')->heading('Jumlah Tanggungan'),
+                                Column::make('total_pengeluaran')->heading('Total Pengeluaran'),
+                                Column::make('total_pendapatan')->heading('Total Pendapatan'),
+                                Column::make('selisih')->heading('Selisih'),
+                                Column::make('komitmen_program')->heading('Komitmen Program'),
+                                Column::make('hasil')->heading('Hasil'),
+                                Column::make('status_mustahik')->heading('Status Mustahik'),
+                                Column::make('asnaf')->heading('Asnaf'),
+                                Column::make('tanggal_penerimaan')->heading('Tanggal Penerimaan'),
+                            ]),
+                    ]),
             ]);
     }
 
